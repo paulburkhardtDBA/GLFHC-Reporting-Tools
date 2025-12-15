@@ -1,0 +1,47 @@
+Start-Transcript -Path "C:\SpeedTest\InternetSpeedTestlog.txt"
+<#
+Filename:	InternetSpeedTest.ps1
+Purpose:	This script runs a test of the internet speed on the computer.  
+		If gathers data on all of the adapters and writes the ones that
+		are currently up to a file.
+
+Set up a Windows Scheduled Task to run this code.
+Note: Make sure that you have defined the file correctly below.
+
+#>
+
+# Define output file
+$FilePath = "C:\Speedtest"
+$OutFile = Join-Path -path $FilePath -childPath ("InternetSpeed.txt")
+
+# collect data
+# Get date/tim
+$time = Get-Date -Format "MM/dd/yyyy HH:mm:ss" 
+
+#if file doesn't exist, then make one
+if (!(Test-Path $Outfile))
+{
+New-Item -itemType File -Path $OutFile
+}
+# Sample Internet speed
+$SpeedTests = Get-NetAdapter | select interfaceDescription, name, status, linkSpeed
+
+# Count how many adapter there are
+$icount = $SpeedTest.count
+
+# Now, link through for each occurance and write results
+foreach ($SpeedTest in $SpeedTests)
+{
+	#Only write connect adapters
+	if ($Speedtest.status -eq "Up")
+	{
+		# Couple results
+		$Line = "$time $SpeedTest"
+
+		# Now append results to file
+		$Line | Out-File $OutFile -append -Width 132
+	}
+}
+
+
+Stop-Transcript 
